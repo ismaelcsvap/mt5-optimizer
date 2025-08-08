@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Analisador de otimização MT5 - Encontre o menor drawdown com maior lucro">
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>MT5 Optimizer Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <h1>MT5 Optimizer Analyzer</h1>
+            </div>
+            <p class="subtitle">Encontre o menor drawdown com maior lucro</p>
+        </header>
+
+        <div class="auth-section" id="authSection">
+            <div class="auth-tabs">
+                <button class="tab-button active" id="loginTab">Login</button>
+                <button class="tab-button" id="signupTab">Cadastrar</button>
+            </div>
+            
+            <!-- Login Form -->
+            <div class="card" id="loginForm">
+                <div class="card-header">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <h3 class="card-title">Entrar</h3>
+                </div>
+                <div class="card-content">
+                    <form id="loginFormElement">
+                        <div class="form-group">
+                            <label for="loginEmail">Email</label>
+                            <input type="email" id="loginEmail" required autocomplete="email" maxlength="254" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Senha</label>
+                            <input type="password" id="loginPassword" required autocomplete="current-password" minlength="6" maxlength="128">
+                        </div>
+                        <button type="submit" class="button button-primary">
+                            <i class="fas fa-sign-in-alt"></i> Entrar
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Signup Form -->
+            <div class="card" id="signupForm" style="display: none;">
+                <div class="card-header">
+                    <i class="fas fa-user-plus"></i>
+                    <h3 class="card-title">Cadastre-se</h3>
+                </div>
+                <div class="card-content">
+                    <form id="signupFormElement">
+                        <div class="form-group">
+                            <label for="signupEmail">Email</label>
+                            <input type="email" id="signupEmail" required autocomplete="email" maxlength="254" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPassword">Senha (mínimo 6 caracteres)</label>
+                            <input type="password" id="signupPassword" required autocomplete="new-password" minlength="6" maxlength="128" pattern=".{6,}">
+                        </div>
+                        <button type="submit" class="button button-primary">
+                            <i class="fas fa-user-plus"></i> Cadastrar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Info Section -->
+        <div class="user-info" id="userInfo" style="display: none;">
+            <div class="user-welcome">
+                <span id="userEmail"></span>
+                <button class="button button-secondary" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </div>
+        
+        <div class="upload-section" id="uploadSection" style="display: none;">
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Arraste seu arquivo XML aqui</h3>
+                <p>ou clique para selecionar</p>
+                <input type="file" id="xmlFile" accept=".xml" hidden>
+                <button class="button button-primary" onclick="document.getElementById('xmlFile').click()">
+                    <i class="fas fa-file-upload"></i> Selecionar XML
+                </button>
+            </div>
+        </div>
+
+        <div class="dashboard" id="dashboard" style="display: none;">
+            <div class="stats-grid">
+                <div class="card best-result">
+                    <div class="card-header">
+                        <i class="fas fa-trophy"></i>
+                        <h3 class="card-title" id="bestSetupTitle">Melhor Setup</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="stat-value" id="bestProfit">$0</div>
+                        <div class="stat-label" id="bestDrawdown">Drawdown: 0%</div>
+                        <button class="button button-download" id="downloadBest">
+                            <i class="fas fa-download"></i> Baixar SET
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-area"></i>
+                        <h3 class="card-title">Total de Testes</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="stat-value" id="totalTests">0</div>
+                        <div class="stat-label">Configurações testadas</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-percentage"></i>
+                        <h3 class="card-title">Menor Drawdown</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="stat-value" id="minDrawdown">0%</div>
+                        <div class="stat-label">Risco mínimo encontrado</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-dollar-sign"></i>
+                        <h3 class="card-title">Maior Lucro</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="stat-value" id="maxProfit">$0</div>
+                        <div class="stat-label">Melhor resultado absoluto</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-section">
+                <div class="chart-container">
+                    <h3><i class="fas fa-chart-scatter"></i> Relação Drawdown vs Lucro</h3>
+                    <canvas id="scatterChart"></canvas>
+                </div>
+            </div>
+
+            <div class="ranking-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-list-ol"></i> Top 20 Melhores Setups</h2>
+                    <button class="button button-secondary" id="downloadAllSets">
+                        <i class="fas fa-download"></i> Baixar Todos os SETs
+                    </button>
+                </div>
+                <div class="ranking-table">
+                    <table id="rankingTable">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Pass</th>
+                                <th>🔄 Recovery Factor</th>
+                                <th>📊 Sharpe Ratio</th>
+                                <th>Lucro</th>
+                                <th>Drawdown</th>
+                                <th>Profit Factor</th>
+                                <th>Trades</th>
+                                <th>⭐ Qualidade</th>
+                                <th>Score</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rankingBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

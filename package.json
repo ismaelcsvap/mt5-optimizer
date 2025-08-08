@@ -1,0 +1,34 @@
+{
+  "name": "mt5-optimizer-analyzer",
+  "version": "1.0.0",
+  "description": "Analisador de otimização MT5 - Encontre o menor drawdown com maior lucro",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "build": "echo 'Build completed - static files ready'",
+    "start": "python -m http.server 8000"
+  },
+  "keywords": [
+    "mt5",
+    "metatrader",
+    "optimizer",
+    "trading",
+    "forex",
+    "analysis"
+  ],
+  "author": "MT5 Analyzer Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/mt5-optimizer-analyzer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/mt5-optimizer-analyzer/issues"
+  },
+  "homepage": "https://github.com/your-username/mt5-optimizer-analyzer#readme",
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
