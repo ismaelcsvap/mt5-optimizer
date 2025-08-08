@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "dev": "python -m http.server 8000",
-    "build": "mkdir -p public && cp -r *.html *.js *.css *.json *.xml public/ || (md public 2>nul & copy *.html public\\ & copy *.js public\\ & copy *.css public\\ & copy *.json public\\ & copy *.xml public\\)",
+    "build": "mkdir -p public && cp *.html *.js *.css *.json *.xml public/",
     "start": "python -m http.server 8000"
   },
   "keywords": [
